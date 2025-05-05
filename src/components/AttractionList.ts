@@ -2,6 +2,7 @@ import { getAttractions } from '../api/fetchAttractions';
 import { initFavoriteButton } from './FavoriteButton';
 import { initAttractionDetails } from './AttractionDetails';
 import { initPagination } from './Pagination';
+import { initShareButton } from './shareButton';
 
 function displayAttractions(attractions: any[], pagination: any) {
     const attractionList = document.createElement('div');
@@ -31,6 +32,9 @@ function displayAttractions(attractions: any[], pagination: any) {
         attractionDiv.appendChild(video);
         initFavoriteButton(attraction.id, attractionDiv);
         attractionDiv.appendChild(detailsButton);
+
+        // 添加分享按钮
+        initShareButton(attraction, attractionDiv);
 
         attractionList.appendChild(attractionDiv);
     });
