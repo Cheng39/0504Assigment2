@@ -1,0 +1,114 @@
+/* 通用样式 */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+nav {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin-right: 20px;
+}
+
+/* 景点列表样式 */
+#attraction-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.attraction {
+    width: 300px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.attraction img {
+    width: 100%;
+    height: auto;
+}
+
+/* 搜索栏样式 */
+#search-bar {
+    margin: 10px;
+    text-align: center;
+}
+
+#search-bar input {
+    padding: 5px;
+    width: 200px;
+}
+
+#search-bar button {
+    padding: 5px 10px;
+    background-color: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+/* 收藏列表样式 */
+#favorite-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.favorite {
+    width: 300px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.favorite img {
+    width: 100%;
+    height: auto;
+}
+
+/* 景点详情样式 */
+#attraction-details {
+    padding: 10px;
+}
+
+#attraction-details h2 {
+    margin-bottom: 10px;
+}
+
+/* 响应式规则 */
+@media (max-width: 768px) {
+    /* 当屏幕宽度小于等于768px时 */
+   .attraction,
+   .favorite {
+        width: 100%;
+    }
+    #search-bar input {
+        width: 100%;
+    }
+}
+/* 加载动画样式 */
+.loader {
+    border: 16px solid #f3f3f3;
+    border-top: 16px solid #3498db;
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+    margin: 20px auto;
+    display: none;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

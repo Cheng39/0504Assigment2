@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>景点列表</title>
+    <link rel="stylesheet" href="src/styles/styles.css">
+</head>
+
+<body>
+    <nav>
+        <a href="#" id="attraction-list-link">景点列表</a>
+        <a href="#" id="favorite-list-link">收藏列表</a>
+    </nav>
+    <div id="app"></div>
+    <script src="dist/index.js"></script>
+    <script>
+        document.getElementById('attraction-list-link').addEventListener('click', () => {
+            location.reload();
+        });
+        document.getElementById('favorite-list-link').addEventListener('click', async () => {
+            const { initFavoriteList } = await import('./src/components/FavoriteList.js');
+            initFavoriteList();
+        });
+        // 初始化搜索栏
+        (async () => {
+            const { initSearchBar } = await import('./src/components/SearchBar.js');
+            initSearchBar();
+        })();
+    </script>
+</body>
+
+</html>
