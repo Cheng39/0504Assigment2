@@ -123,7 +123,9 @@ async function removeFromFavorites(itemId: number): Promise<{ message: 'newly de
 
 // 获取当前用户已收藏的项目 ID 列表
 // API: GET /bookmarks
-async function getFavoriteIds(): Promise<{ item_ids: number[] }> { // 返回类型是 { item_ids: number[] }
+async function getFavoriteIds(): Promise<{
+    items: any; item_ids: number[] 
+}> { // 返回类型是 { item_ids: number[] }
      // === 获取 Token ===
     const token = getAuthToken();
     // 注意：作业要求 "整合登入用戶的收藏項目 (5 分)"
@@ -177,7 +179,7 @@ async function getFavoriteIds(): Promise<{ item_ids: number[] }> { // 返回类�
              throw new Error(errorMessage);
          }
 
-         return data as { item_ids: number[] }; // 返回 { item_ids: [...] } 对象
+         return data  // 返回 { item_ids: [...] } 对象
 
      } catch (error: any) {
          console.error('Network or unexpected error getting favorite IDs:', error);

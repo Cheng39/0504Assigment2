@@ -1,51 +1,44 @@
-<!DOCTYPE html>
-<html lang="zh-HK">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>景点列表</title>
-    
-</head>
-
 <body>
-    <nav>
-        <a href="#" id="attraction-list-link">景点列表</a>
-        <a href="#" id="favorite-list-link">收藏列表</a>
-        <span id="auth-status" style="margin-left: 20px;">
-            <span id="username-display" style="margin-right: 10px; display: none;"></span>
-            <button id="logout-button" style="display: none;">登出</button>
-            <button id="show-login-button">登录 / 注册</button>
-        </span>
-    </nav>
-
-    <div id="auth-forms" style="margin-top: 20px; padding: 20px; border: 1px solid #ccc; display: none;">
-        <h2>使用者認證</h2>
-
-        <div id="login-form-container">
-            <h3>登录</h3>
-            <input type="text" id="login-username" placeholder="用户名">
-            <input type="password" id="login-password" placeholder="密码">
-            <button id="login-button">登录</button>
-            <p id="login-error-message" style="color: red;"></p>
-            <p>没有账号? <a href="#" id="show-signup-link">注册</a></p>
+    <div id="app-container">
+        <header>
+            <h1>公共景点探索</h1>
+            <nav>
+                <a href="#" id="attraction-list-link">景点列表</a>
+                <a href="#" id="favorite-list-link">收藏列表</a>
+                <button id="refresh-attraction-list-button">刷新列表</button>
+            </nav>
+            <div id="auth-status">
+                <span id="username-display"></span>
+                <button id="logout-button">登出</button>
+                <button id="show-login-button">登录 / 注册</button>
+            </div>
+        </header>
+        <div id="auth-forms" style="display: none;">
+            <div id="login-form-container">
+                 <h2>登录</h2>
+                 <input type="text" id="login-username" placeholder="用户名">
+                 <input type="password" id="login-password" placeholder="密码">
+                 <button id="login-button">登录</button>
+                 <p id="login-error-message" style="color: red;"></p>
+                 <p>没有账号？<a href="#" id="show-signup-link">立即注册</a></p>
+             </div>
+             <div id="signup-form-container" style="display: none;">
+                 <h2>注册</h2>
+                 <input type="text" id="signup-username" placeholder="用户名">
+                 <input type="password" id="signup-password" placeholder="密码">
+                 <button id="signup-button">注册</button>
+                 <p id="signup-error-message" style="color: red;"></p>
+                 <p>已有账号？<a href="#" id="show-login-link">返回登录</a></p>
+             </div>
+            <button id="hide-auth-forms">关闭</button>
         </div>
 
-        <div id="signup-form-container" style="display: none;">
-            <h3>注册</h3>
-            <input type="text" id="signup-username" placeholder="用户名">
-            <input type="password" id="signup-password" placeholder="密码">
-            <button id="signup-button">注册</button>
-            <p id="signup-error-message" style="color: red;"></p>
-            <p>已有账号? <a href="#" id="show-login-link">登录</a></p>
-        </div>
-         <button id="hide-auth-forms" style="margin-top: 10px;">关闭</button>
+        <main id="app">
+            </main>
+
+        <footer>
+            <p>&copy; 2025 公共景点探索</p>
+        </footer>
     </div>
-
-    <div id="app">
-        </div>
-
- 
-</body>
-
+    </body>
 </html>
