@@ -98,7 +98,7 @@ async function loadPage(pageNumber: number, searchTerm: string = '') {
 
     // === 步骤 3: 调用 API 获取指定页码的景点数据 ===
     try {
-        console.log(`Workspaceing attractions for page ${pageNumber}, search term: "${searchTerm}"...`);
+        console.log(`Workspaceing attractions for page <span class="math-inline">\{pageNumber\}, search term\: "</span>{searchTerm}"...`); // Fix typo from "Workspaceing"
         // 调用 API 获取指定页码的数据，并包含搜索关键词（如果提供了的话）
         const data = await getAttractions(pageNumber, searchTerm); // 确保你在文件顶部导入了 getAttractions
         const attractions = data.items; // 获取景点项目数组
@@ -111,7 +111,7 @@ async function loadPage(pageNumber: number, searchTerm: string = '') {
         // === 步骤 5: 清除加载指示器，并调用 renderAttractionList 函数显示页面内容 ===
         // 在数据获取成功后，移除加载指示器
         if(loaderElement && loaderElement.parentNode) {
-            loaderElement.remove(); // 移除加载器元素
+            loaderElement.remove();
         }
         loaderElement = null; // 清空对加载器元素的引用
 
@@ -127,19 +127,17 @@ async function loadPage(pageNumber: number, searchTerm: string = '') {
         if (prevPageButton) {
             prevPageButton.addEventListener('click', () => {
                 console.log('Clicked Previous Page');
-                // 点击“上一页”，调用 loadPage 加载前一页的数据
-                // currentPage 已经是当前页码，前一页是 currentPage - 1
-                // 同时保留当前的搜索关键词
-                loadPage(currentPage - 1, searchTerm); // 调用 loadPage，传入前一页码和当前搜索关键词
+                // Call loadPage with the previous page number (currentPage is global)
+                // Assuming search term is not preserved across pagination clicks unless explicitly handled
+                loadPage(currentPage - 1, searchTerm); // Load previous page, clear search term
             });
         }
         if (nextPageButton) {
             nextPageButton.addEventListener('click', () => {
                 console.log('Clicked Next Page');
-                // 点击“下一页”，调用 loadPage 加载后一页的数据
-                // 后一页是 currentPage + 1
-                // 同时保留当前的搜索关键词
-                loadPage(currentPage + 1, searchTerm); // 调用 loadPage，传入后一页码和当前搜索关键词
+                // Call loadPage with the next page number (currentPage is global)
+                // Assuming search term is not preserved across pagination clicks unless explicitly handled
+                loadPage(currentPage + 1, searchTerm); // Load next page, clear search term
             });
         }
 
@@ -149,23 +147,76 @@ async function loadPage(pageNumber: number, searchTerm: string = '') {
     } catch (error: any) {
         // === 处理加载景点数据失败的错误 (API 返回非 2xx 状态码或网络错误) ===
         console.error(`Failed to load page ${pageNumber}:`, error);
-         // 在错误发生时也要确保加载器被移除
+         // 确保加载器在错误发生时被移除
          if(loaderElement && loaderElement.parentNode) {
              loaderElement.remove();
          }
-         loaderElement = null; // 清空引用
-         // 显示错误信息给用户
-         const app = document.getElementById('app'); // 重新获取 app 容器 (确保存在)
+         loaderElement = null;
+
+         // === 修改错误消息的显示：文本、样式和定时移除 ===
+         const app = document.getElementById('app'); // 重新获取 app 容器，确保存在
          if(app) {
-             loadErrorElement = document.createElement('div'); // 使用外部变量 loadErrorElement
-             loadErrorElement.textContent = `错误: 加载第 ${pageNumber} 页失败 - ${error.message || '未知错误'}`;
-             loadErrorElement.style.color = 'red'; // 错误信息使用红色
-             loadErrorElement.style.textAlign = 'center'; // 文本居中
-             app.appendChild(loadErrorElement); // 将错误信息添加到 #app 容器
+             // 移除任何之前可能存在的临时错误消息 (检查 body，因为我们使用 fixed 定位)
+             const existingTempError = document.body.querySelector('#temp-load-error');
+             if(existingTempError) existingTempError.remove();
+
+
+             loadErrorElement = document.createElement('div'); // 使用外部变量 loadErrorElement 来引用错误消息元素
+             loadErrorElement.id = 'temp-load-error'; // 给这个临时错误消息元素一个 ID，方便以后查找和移除
+             // === 修改错误消息的文本 ===
+             loadErrorElement.textContent = '服务器链接失败，请尝试刷新页面'; // 新的中文提示
+
+             // === 添加 CSS 样式用于定位 (屏幕底部居中) 和外观 ===
+             loadErrorElement.style.position = 'fixed'; // 固定位置，相对于浏览器窗口
+             loadErrorElement.style.bottom = '20px'; // 距离屏幕底部 20 像素
+             loadErrorElement.style.left = '50%'; // 从屏幕左侧 50% 位置开始
+             loadErrorElement.style.transform = 'translateX(-50%)'; // 向左平移自身宽度的一半，实现水平居中
+             loadErrorElement.style.backgroundColor = '#f8d7da'; // 浅红色背景 (类似于错误反馈的样式)
+             loadErrorElement.style.color = '#721c24'; // 深红色文字
+             loadErrorElement.style.border = '1px solid #f5c6cb'; // 红色边框
+             loadErrorElement.style.padding = '10px 20px'; // 内边距
+             loadErrorElement.style.borderRadius = '5px'; // 圆角
+             loadErrorElement.style.zIndex = '1000'; // 确保它显示在其他内容的上面
+             loadErrorElement.style.opacity = '1'; // 初始不透明度为 1 (完全可见)
+             // 添加 opacity 的 CSS 过渡效果，用于渐变消失
+             loadErrorElement.style.transition = 'opacity 0.5s ease-in-out';
+
+
+             // === 将错误消息元素添加到 document.body 中 ===
+             // 使用 fixed 定位的元素通常添加到 body 中，这样它们的位置就不会受到 #app 内容滚动的影响
+             document.body.appendChild(loadErrorElement);
+
+
+             // === 添加定时器，让错误消息在一定时间后自动移除 ===
+             const displayDuration = 3000; // 消息显示的时长 (毫秒)，这里改为 3 秒
+             const fadeOutDuration = 500; // 渐变消失的时长 (毫秒)，需要和 CSS transition 的时长匹配
+
+             // 第一个定时器：在消息显示 displayDuration 后开始渐变消失
+             setTimeout(() => {
+                 // 检查元素是否存在后，将不透明度设置为 0，触发渐变效果
+                 if(loadErrorElement) {
+                      loadErrorElement.style.opacity = '0';
+                 }
+
+                 // 第二个定时器：在渐变消失动画完成后，将元素从 DOM 中移除
+                 // 延迟时间等于渐变时长，确保动画播放完毕
+                 setTimeout(() => {
+                     // 在尝试移除元素之前，再次检查它是否仍然存在于 DOM 中 (避免重复移除导致错误)
+                     if (loadErrorElement && loadErrorElement.parentNode) {
+                         loadErrorElement.parentNode.removeChild(loadErrorElement);
+                     }
+                     // 清空对元素的引用，帮助垃圾回收
+                     loadErrorElement = null;
+                 }, fadeOutDuration); // 等待渐变时长后再移除
+
+
+             }, displayDuration); // 在 displayDuration (3秒) 后执行第一个定时器
+
+
          }
-         // 加载失败时，当前页码 (currentPage) 应该保持不变，因为它仍然是上一次成功加载的页码。
+         // 加载失败时，currentPage 保持不变，因为它仍然是上一次成功加载的页码 (如果有的话)。
          // 不需要在这里修改 currentPage。
-    }
+     }
 }
 
 
@@ -251,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
          initSearchBar(); // 调用搜索栏的初始化函数。
          // SearchBar 模块应该负责获取用户的搜索输入，并在用户点击搜索按钮时，
          // 调用 initAttractionList 函数并传递搜索关键词，例如： initAttractionList(searchTerm);
-         // 这需要在 SearchBar.ts 中实现。initAttractionList 已经被导出，可以在 SearchBar 中导入使用。
+         // 这需要在 SearchBar.ts 中实现。initAttractionList 已被导出，可以在 SearchBar 中导入使用。
     }).catch(error => {
         console.error('Failed to load SearchBar module:', error);
         // 如果搜索栏模块加载失败，可以不显示搜索栏或显示错误信息
@@ -370,7 +421,6 @@ function createAttractionItemElement(attraction: any, userFavoriteIds: number[] 
 
     return attractionDiv; // 返回创建好的景点项目 div 元素
 }
-
 // Helper 函数：创建景点列表项目容器
 function createAttractionListItemsContainer(attractions: any[], userFavoriteIds: number[] = []) {
     const attractionListContainer = document.createElement('div');
