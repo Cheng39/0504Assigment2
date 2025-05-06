@@ -1,114 +1,558 @@
+/* src/styles/styles.css */
+
 /* 通用样式 */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    background-color: #f8f8f8; /* 添加一个浅背景色让页面看起来不那么白 */
 }
 
-nav {
+/* 注意：你之前的 nav 样式如果不再需要，可以移除 */
+/* nav {
     background-color: #333;
     color: white;
     padding: 10px;
-}
+} */
 
-nav a {
+/* 注意：nav a 的样式现在由 .header-nav a 控制，这里的 nav a 规则如果不再需要，可以移除 */
+/* nav a {
     color: white;
     text-decoration: none;
     margin-right: 20px;
-}
+} */
 
-/* 景点列表样式 */
-#attraction-list {
+
+/* === Header 区域样式 === */
+header {
+    background-color: #333; /* 页眉背景色 */
+    color: #fff; /* 页眉文字颜色 */
+    padding: 10px 20px; /* 内边距 */
+    /* 使用 flexbox 布局让三个主要子区域 (title, nav/auth/refresh, search) 垂直堆叠 */
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
+    flex-direction: column; /* 子元素（行容器）垂直堆叠 */
+    gap: 10px; /* 子元素（行容器）之间的垂直间距 */
 }
 
-.attraction {
-    width: 300px;
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin: 10px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+/* 标题区域样式 */
+.header-title-row {
+    width: 100%; /* 标题区域占满整行 */
+    text-align: center; /* 标题文字居中 */
 }
 
-.attraction img {
-    width: 100%;
-    height: auto;
+.header-title-row h1 {
+    margin: 0; /* 移除 h1 默认的外边距 */
+    font-size: 1.8em; /* 调整标题字体大小 */
+    color: #fff; /* 确保标题文字颜色 */
+    /* 在 flex 容器中时，inline-block 可以帮助居中 */
+    display: inline-block;
 }
 
-/* 搜索栏样式 */
-#search-bar {
-    margin: 10px;
-    text-align: center;
+/* 导航、认证和刷新区域样式 (全部在同一行) */
+.header-nav-auth-refresh-row {
+    display: flex; /* 使用 flexbox 让导航区域和认证/刷新区域在同一行 */
+    justify-content: space-between; /* 使导航区域靠左，认证/刷新区域靠右 */
+    align-items: center; /* 垂直居中对齐子元素 */
+    width: 100%; /* 占满整行 */
+    /* 使用 gap 控制导航区和认证/刷新区之间的间距 */
+    gap: 20px; /* 增加导航区和认证/刷新组之间的间距 */
+    flex-wrap: wrap; /* 允许换行，防止在小屏幕上溢出 */
 }
 
-#search-bar input {
-    padding: 5px;
-    width: 200px;
+/* 导航链接容器样式 */
+.header-nav {
+     display: flex; /* 使用 flexbox 让导航链接在同一行 */
+     align-items: center; /* 垂直居中对齐导航链接 */
+     gap: 15px; /* 导航链接之间的间距 */
+     /* flex-shrink: 0; /* 防止导航链接组收缩 */
 }
 
-#search-bar button {
-    padding: 5px 10px;
-    background-color: #333;
-    color: white;
-    border: none;
+.header-nav a {
+    color: #fff; /* 导航链接文字颜色 */
+    text-decoration: none; /* 移除下划线 */
+    font-size: 1.1em; /* 调整字体大小 */
+    /* 如果需要让链接有固定宽度，可以在这里设置 width */
+}
+
+.header-nav a:hover {
+    text-decoration: underline; /* 鼠标悬停时显示下划线 */
+}
+
+/* 认证状态和刷新按钮容器样式 */
+.header-auth-refresh {
+    display: flex; /* 使用 flexbox 让认证状态和刷新按钮在同一行 */
+    align-items: center; /* 垂直居中对齐 */
+    gap: 10px; /* 认证状态和刷新按钮之间的间距 */
+    flex-wrap: wrap; /* 允许内部元素换行 */
+    justify-content: flex-end; /* 内部元素靠右对齐 */
+    /* flex-shrink: 0; /* 防止认证/刷新组收缩 */
+}
+
+/* 刷新按钮样式 - 与导航/分页/景点详情按钮大小一致 */
+#refresh-attraction-list-button {
+ width: 100px; /* 设置固定宽度 */
+ padding: 8px 15px; /* 调整内边距，使其与导航/分页按钮高度更接近 */
+ cursor: pointer; /* 鼠标样式 */
+ border: 1px solid #ccc; /* 边框 */
+ border-radius: 4px; /* 圆角 */
+ background-color: #f0f0f0; /* 背景色 */
+    font-size: 1em; /* 确保字体大小一致 */
+    color: #333; /* 按钮文字颜色 */
+ transition: transform 0.5s ease-in-out; /* 添加一个平滑的过渡效果，让旋转更自然 */
+}
+
+/* 刷新按钮点击时的旋转动画 */
+/* @keyframes spin 已经定义在加载动画部分，无需重复 */
+
+/* 当按钮带有 spinning 类时应用旋转动画 */
+#refresh-attraction-list-button.spinning {
+ animation: spin 1s linear infinite; /* 应用旋转动画 */
+}
+
+/* 搜索栏区域样式 (单独占一行) */
+.header-search-row {
+ width: 100%; /* 搜索区域占满整行 */
+ display: flex; /* 使用 flexbox 让搜索栏容器在行中居中 */
+ justify-content: center; /* 搜索栏整体在行中居中 */
+ align-items: center; /* 使内部元素垂直居中 */
+    padding: 5px 0; /* 上下内边距 */
+}
+
+/* 搜索栏容器样式 (搜索输入框和按钮在同一行) */
+/* 这个容器由 SearchBar.ts 创建并插入到 #search-bar-container 中 */
+/* 假设 SearchBar.ts 创建的顶层元素有类名或 ID */
+/* 如果 SearchBar.ts 直接创建 input 和 button 并放入 #search-bar-container, 那么以下规则直接作用于 #search-bar-container */
+#search-bar-container {
+    display: flex; /* 使用 flexbox 让搜索输入框和按钮在同一行 */
+ gap: 10px; /* 元素之间的间距 */
+ align-items: center; /* 垂直居中对齐输入框和按钮 */
+ width: 100%; /* 允许搜索容器在其父容器 (.header-search-row) 中占满宽度 */
+ max-width: 600px; /* 设置搜索栏的最大宽度 */
+    /* background-color: green; /* 你截图中的绿框可能是为了调试，这里可以保留或移除 */ 
+    
+    box-sizing: border-box; /* 让 padding 包含在宽度内 */
+    border-radius: 4px;
+}
+
+/* 使搜索输入框变大并调整 flex 属性 */
+/* 确保这些规则能选中 SearchBar.ts 创建的 input */
+#search-bar-container input[type="text"] {
+ padding: 12px 15px; /* 增加内边距，使其看起来更高更大 */
+ border: 1px solid #ccc;
+ border-radius: 4px;
+ flex-grow: 1; /* 允许输入框增长以填充可用空间 */
+    flex-shrink: 1; /* 允许输入框收缩 */
+    min-width: 150px; /* 设置最小宽度，防止在小屏幕上过小 */
+ font-size: 1em; /* 字体大小 */
+    /* background-color: white; /* 确保背景色是白色 */ 
+}
+
+/* 搜索按钮样式 */
+/* 确保这些规则能选中 SearchBar.ts 创建的 button */
+#search-bar-container button {
+ padding: 12px 20px; /* 增加内边距，使其看起来更高更大 */
+ cursor: pointer;
+ border: 1px solid #007bff;
+ border-radius: 4px;
+ background-color: #007bff;
+ color: white;
+ font-size: 1em;
+    flex-shrink: 0; /* 防止按钮收缩 */
+}
+
+/* 搜索按钮鼠标悬停效果 */
+#search-bar-container button:hover {
+ background-color: #0056b3;
+ border-color: #004085;
+}
+
+
+/* === 主要内容区域和列表样式 === */
+/* 使用 Grid 布局让景点列表更规整 */
+#app {
+ padding: 20px; /* 添加整体内边距 */
+ padding-bottom: 70px; /* 增加底部内边距，为固定底部的元素腾出更多空间 */
+    display: grid; /* 使用 grid 布局 */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* 自适应列宽，最小300px */
+    gap: 20px; /* 项目之间的间距 */
+}
+
+/* 景点项目容器样式 */
+.attraction-item { /* 确保你在 JS 中创建的每个景点项目都有这个类名 */
+ border: 1px solid #ccc;
+ padding: 15px; /* 增加内边距 */
+ box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 调整阴影 */
+    background-color: #fff; /* 白色背景 */
+    border-radius: 8px; /* 圆角 */
+    display: flex;
+    flex-direction: column; /* 项目内部元素垂直堆叠 */
+}
+
+.attraction-item img,
+.attraction-item video { /* 同时应用图片和视频样式 */
+ max-width: 100%; /* 使用 max-width */
+ height: auto;
+    margin-bottom: 10px; /* 图片或视频下方留白 */
+    border-radius: 4px; /* 图片视频圆角 */
+    display: block; /* 使图片/视频成为块级元素，避免底部留白 */
+}
+
+.attraction-item h2 {
+    margin-top: 0; /* 移除顶部外边距 */
+    margin-bottom: 10px; /* 底部外边距 */
+    color: #333;
+    font-size: 1.3em; /* 调整标题大小 */
+}
+
+.attraction-item p {
+    margin-bottom: 15px; /* 描述下方留白 */
+    color: #666;
+    flex-grow: 1; /* 让描述占用剩余空间，使按钮对齐底部 */
+    line-height: 1.5; /* 行高 */
+}
+
+/* 景点详情按钮样式 (在 createAttractionItemElement 中创建) */
+.attraction-item button {
+    margin-top: auto; /* 将按钮推到底部 */
+    padding: 8px 15px; /* 与其他小按钮padding一致 */
     cursor: pointer;
+    border: none; /* 移除边框 */
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+    /* width: 100%; /* 如果希望按钮占满卡片宽度 */ 
+    display: block; /* 使按钮成为块级元素 */
+    text-align: center; /* 按钮文字居中 */
+    text-decoration: none; /* 移除可能的链接下划线 */
 }
+
+.attraction-item button:hover {
+    background-color: #0056b3;
+}
+
 
 /* 收藏列表样式 */
-#favorite-list {
+/* 如果你在 FavoriteList.ts 中也使用 #app 容器和 .attraction-item 类，则不需要单独的 #favorite-list 规则 */
+/* #favorite-list {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
-}
+} */
 
-.favorite {
-    width: 300px;
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin: 10px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-}
-
-.favorite img {
-    width: 100%;
-    height: auto;
-}
 
 /* 景点详情样式 */
 #attraction-details {
-    padding: 10px;
+ padding: 20px; /* 增加内边距 */
+    background-color: #fff;
+    border-radius: 8px;
+    max-width: 800px; /* 设置最大宽度 */
+    margin: 20px auto; /* 居中显示并添加上下外边距 */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 #attraction-details h2 {
-    margin-bottom: 10px;
+ margin-top: 0;
+ margin-bottom: 15px;
+    color: #333;
+    font-size: 1.5em;
 }
 
-/* 响应式规则 */
+#attraction-details img,
+#attraction-details video {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 10px auto; /* 图片视频居中 */
+    border-radius: 4px;
+}
+
+
+/* === 响应式规则 (适用于屏幕宽度小于等于 768px) === */
 @media (max-width: 768px) {
-    /* 当屏幕宽度小于等于768px时 */
-   .attraction,
-   .favorite {
-        width: 100%;
+
+    /* 调整头部区域布局在小屏幕下垂直堆叠 */
+    header {
+        padding: 10px; /* 减小头部内边距 */
+        /* header 的 display: flex; flex-direction: column; gap: 10px; 在媒体查询外已经设置，这里无需重复 */
     }
-    #search-bar input {
-        width: 100%;
+
+    /* 导航、认证和刷新区域容器，在小屏幕下改为垂直堆叠 */
+    .header-nav-auth-refresh-row {
+         flex-direction: column; /* 在小屏幕上垂直堆叠导航和认证/刷新组 */
+         align-items: flex-start; /* 子元素（导航和认证/刷新组）靠左对齐 */
+         gap: 10px; /* 导航组和认证/刷新组之间的垂直间距 */
     }
-}
-/* 加载动画样式 */
-.loader {
-    border: 16px solid #f3f3f3;
-    border-top: 16px solid #3498db;
-    border-radius: 50%;
-    width: 120px;
-    height: 120px;
-    animation: spin 2s linear infinite;
-    margin: 20px auto;
-    display: none;
+
+    /* 导航链接容器在小屏幕下的样式 */
+    .header-nav {
+        width: 100%; /* 导航链接容器占满整行 */
+        justify-content: center; /* 导航链接在容器内居中 */
+        gap: 10px; /* 导航链接之间的间距 */
+        flex-wrap: wrap; /* 允许链接换行 */
+    }
+
+    .header-nav a {
+        font-size: 1em; /* 调整导航链接字体大小 */
+        /* 如果需要，可以调整链接的内边距 */
+    }
+
+    /* 认证状态和刷新按钮容器在小屏幕下的样式 */
+    .header-auth-refresh {
+        width: 100%; /* 认证/刷新容器占满整行 */
+        justify-content: center; /* 认证状态和刷新按钮在容器内居中 */
+        gap: 10px; /* 认证状态和刷新按钮之间的间距 */
+        flex-wrap: wrap; /* 允许内部元素换行 */
+        /* align-items: center; 在媒体查询外已设置，这里可以保留或根据需要调整 */
+    }
+
+    /* 刷新按钮在小屏幕下的样式 */
+    #refresh-attraction-list-button {
+        width: auto; /* 移除固定宽度，让按钮宽度自适应内容或 flex 布局 */
+        padding: 8px 12px; /* 调整内边距 */
+        font-size: 0.9em; /* 调整字体大小 */
+    }
+
+    /* 搜索栏区域容器在小屏幕下的样式 */
+    .header-search-row {
+        /* header-search-row 在媒体查询外已经设置为 display: flex; flex-direction: row; justify-content: center; */
+        /* 在小屏幕下，让搜索栏容器 (#search-bar-container) 占满宽度 */
+        padding: 0 10px; /* 添加左右内边距，使其不紧贴边缘 */
+        box-sizing: border-box; /* 让 padding 包含在宽度内 */
+    }
+
+    /* 搜索栏容器 (#search-bar-container) 在小屏幕下的样式 */
+    #search-bar-container {
+        flex-direction: column; /* 在小屏幕下垂直堆叠搜索输入框和按钮 */
+        gap: 10px; /* 垂直堆叠时的间距 */
+        max-width: none; /* 不限制最大宽度，占满父容器宽度 (减去 padding) */
+        width: 100%; /* 确保占满父容器宽度 */
+        padding: 0; /* 移除绿框调试时的内边距 */
+        border: none; /* 移除绿框 */
+        box-sizing: border-box; /* 保持 box-sizing */
+    }
+
+    /* 搜索输入框在小屏幕下的样式 */
+    #search-bar-container input[type="text"] {
+        width: 100%; /* 输入框占满容器宽度 */
+        padding: 10px 12px; /* 调整内边距 */
+        box-sizing: border-box; /* 让 padding 包含在宽度内 */
+        flex-grow: 1; /* 允许增长 */
+        flex-shrink: 1; /* 允许收缩 */
+        min-width: 0; /* 允许收缩到比内容还小（必要时） */
+        font-size: 1em; /* 字体大小 */
+    }
+
+    /* 搜索按钮在小屏幕下的样式 */
+    #search-bar-container button {
+        width: 100%; /* 按钮占满容器宽度 */
+        padding: 10px 12px; /* 调整内边距 */
+        box-sizing: border-box; /* 让 padding 包含在宽度内 */
+        flex-shrink: 0; /* 防止收缩 */
+        font-size: 1em; /* 字体大小 */
+    }
+
+
+    /* 调整主要内容区域 (#app) 和景点项目 (.attraction-item) 的样式 */
+    #app {
+        grid-template-columns: 1fr; /* 在小屏幕上每列占满宽度 */
+        padding: 10px; /* 减小内边距 */
+        gap: 15px; /* 调整项目之间的间距 */
+    }
+
+    .attraction-item {
+ width: auto; /* 让项目宽度自适应容器 */
+        padding: 10px; /* 减小内边距 */
 }
 
+    /* 调整景点详情页在小屏幕下的样式 */
+    #attraction-details {
+        padding: 15px;
+        margin: 15px auto;
+    }
+
+    /* 调整认证表单在小屏幕下的样式 */
+    #auth-forms {
+        padding: 15px;
+        width: 95%; /* 调整宽度 */
+    }
+
+    #auth-forms input {
+        width: calc(100% - 24px); /* 保持计算 */
+        padding: 10px; /* 调整内边距 */
+        margin-bottom: 10px; /* 调整外边距 */
+    }
+
+    #auth-forms button {
+        padding: 10px 15px;
+        font-size: 1em;
+    }
+
+
+    /* 调整分页控件在小屏幕下的样式 */
+    .pagination-controls {
+         padding-bottom: 10px; /* 减小底部内边距 */
+         /* 如果按钮太多可能需要考虑换行或减小间距 */
+    }
+    .pagination-controls button {
+        margin: 0 3px; /* 减小按钮之间的间距 */
+        padding: 8px 10px; /* 调整内边距 */
+    }
+     .pagination-controls span {
+        display: block; /* 让页码信息独占一行（可选） */
+        margin-top: 5px; /* 添加上方间距 */
+        font-size: 0.9em; /* 调整字体大小 */
+     }
+
+}
+/* === 加载动画样式 === */
+.loader {
+ border: 16px solid #f3f3f3;
+ border-top: 16px solid #3498db;
+ border-radius: 50%;
+ width: 50px; /* 缩小加载器 */
+ height: 50px; /* 缩小加载器 */
+ animation: spin 2s linear infinite;
+ margin: 20px auto;
+ display: block; /* 默认显示为块级元素以便居中 */
+}
+
+/* 定义旋转动画，用于加载器和刷新按钮 */
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+ 0% { transform: rotate(0deg); }
+ 100% { transform: rotate(360deg); }
+}
+
+
+/* === 页脚样式 === */
+/* 页脚 (footer) 的样式，使其固定在屏幕底部 */
+footer {
+ position: fixed; /* 固定位置，相对于浏览器窗口 */
+ bottom: 0; /* 距离屏幕底部 0 */
+ left: 0; /* 距离屏幕左侧 0 */
+ width: 100%; /* 宽度占满整个屏幕 */
+ text-align: center; /* 文本居中显示 */
+ background-color: #f0f0f0; /* 添加一个浅灰色背景，使其与内容分开 */
+ padding: 5px 0; /* 上下内边距，增加一些空间 */
+ box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* 添加顶部阴影，增加立体感 */
+ z-index: 999; /* 确保页脚在大多数其他内容之上显示 */
+}
+
+footer p {
+ margin: 0; /* 移除段落默认的外边距 */
+ font-size: 0.9em; /* 调整字体大小，使其稍微小一些 */
+color: #555; /* 调整字体颜色，使其不是纯黑色 */
+}
+
+/* === 临时错误消息样式 (用于加载景点列表失败) === */
+/* 这个样式由 AttractionList.ts 在 catch 块中动态添加到 body */
+#temp-load-error {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #f8d7da; /* 浅红色背景 */
+    color: #721c24; /* 深红色文字 */
+    border: 1px solid #f5c6cb; /* 红色边框 */
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 1000; /* 确保在顶层 */
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+    /* Note: 定时移除的逻辑在 AttractionList.ts 中 */
+}
+
+/* === AuthUI 相关的样式 (如果 AuthUI 组件需要特定样式来融入布局) === */
+/* 你可能需要根据 AuthUI.ts 实际生成的 HTML 结构来添加或调整这里的样式 */
+/* 例如，如果 #auth-status 内的按钮需要调整间距或大小 */
+#auth-status {
+    display: flex; /* 让 #auth-status 内部的元素（如用户名、登出、登录/注册按钮）水平排列 */
+    align-items: center; /* 垂直居中 */
+    gap: 10px; /* 元素之间的间距 */
+    flex-wrap: wrap; /* 允许换行 */
+}
+
+#auth-status button {
+    padding: 8px 15px; /* 与其他小按钮padding一致 */
+    cursor: pointer;
+    border: none; /* 移除边框 */
+    border-radius: 4px;
+    background-color: #f0f0f0;
+    color: #333;
+    font-size: 1em;
+}
+
+#auth-status button:hover {
+    background-color: #ddd;
+}
+
+#auth-status span {
+     color: #fff; /* 用户名文字颜色 */
+     margin-right: 5px; /* 与后面按钮的间距 */
+     font-size: 1.1em;
+}
+
+
+/* Auth 表单区域的样式 */
+#auth-forms {
+    position: fixed; /* 固定或使用其他定位方式使其覆盖在内容上方 */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1000; /* 确保在最顶层 */
+    display: none; /* 初始化时由 JS 控制显示/隐藏 */
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+}
+
+#auth-forms input {
+    display: block; /* 输入框独占一行 */
+    width: calc(100% - 24px); /* 宽度减去 padding */
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+#auth-forms button {
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    font-size: 1.1em;
+    margin-top: 10px;
+}
+
+#auth-forms button:hover {
+    background-color: #0056b3;
+}
+
+#auth-forms p {
+    margin-top: 15px;
+    font-size: 0.9em;
+    color: #555;
+}
+
+#auth-forms a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+#auth-forms a:hover {
+    text-decoration: underline;
+}
+
+#auth-forms h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #333;
 }

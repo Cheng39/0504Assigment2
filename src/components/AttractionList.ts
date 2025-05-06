@@ -168,7 +168,7 @@ async function loadPage(pageNumber: number, searchTerm: string = '') {
 
              // === 添加 CSS 样式用于定位 (屏幕底部居中) 和外观 ===
              loadErrorElement.style.position = 'fixed'; // 固定位置，相对于浏览器窗口
-             loadErrorElement.style.bottom = '20px'; // 距离屏幕底部 20 像素
+             loadErrorElement.style.bottom = '60px'; // 距离屏幕底部 20 像素
              loadErrorElement.style.left = '50%'; // 从屏幕左侧 50% 位置开始
              loadErrorElement.style.transform = 'translateX(-50%)'; // 向左平移自身宽度的一半，实现水平居中
              loadErrorElement.style.backgroundColor = '#f8d7da'; // 浅红色背景 (类似于错误反馈的样式)
